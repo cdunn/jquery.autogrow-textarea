@@ -28,10 +28,12 @@
 
     this.filter('textarea,input').each(function() {
 
-      var $this       = $(this),
+      var $this   = $(this),
       minHeight   = $this.height(),
-      maxHeight	= $this.attr( "maxHeight" ),
-      minWidth	= typeof( $this.attr( "minWidth" ) ) == "undefined" ? 0 : $this.attr( "minWidth" );
+      maxHeight	  = $this.attr( "maxHeight" ),
+      minWidth	  = typeof( $this.attr( "minWidth" ) ) == "undefined" ? 0 : $this.attr( "minWidth" ),
+      prevHeight  = 0,
+      prevWidth   = 0;
 
       if( typeof( maxHeight ) == "undefined" ) maxHeight = 1000000;
 
@@ -98,7 +100,24 @@
               $(this).css( "overflow", newHeight == maxHeight ? "auto" : "hidden" );
             }
 
-        $(this).trigger("resized.autogrow");
+            $(this).trigger("valuechange.autogrow", val);
+
+            // Trigger sizechange event
+            var sizeChanged = false;
+            if($(this).height() != prevHeight) {
+              prevHeight = $(this).height()
+              sizeChanged = true;
+            }
+            if($(this).width() != prevWidth) {
+              prevWidth = $(this).width()
+              sizeChanged = true;
+            }
+            if(sizeChanged) {
+              $(this).trigger("sizechange.autogrow", {
+                width: prevWidth,
+                height: prevHeight
+              });
+            }
       };
 
       $(this)
@@ -186,3 +205,4 @@
     } );
   }
 } ) );
+
