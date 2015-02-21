@@ -52,6 +52,15 @@
       var characterWidth = shadow.width();
       shadow.html( '' );
 
+      var updateShadow = function() {
+        shadow.css({
+          fontSize: $this.css('fontSize'),
+          fontFamily: $this.css('fontFamily'),
+          fontWeight: $this.css('fontWeight'),
+          lineHeight: $this.css('lineHeight')
+        });
+      };
+
       var update = function( val ) {
 
         var times = function(string, number) {
@@ -131,10 +140,13 @@
         update.call( this, valAfterKeypress );
         return true;
       })
-      .bind( "update.autogrow", function(){ update.apply(this); } )
+      .bind( "update.autogrow", function(){
+        updateShadow.apply(self);
+        update.apply(this);
+      })
       .bind( "remove.autogrow", function() {
         shadow.remove();
-      } );
+      });
 
       update.apply(this);
 
@@ -205,4 +217,3 @@
     } );
   }
 } ) );
-
